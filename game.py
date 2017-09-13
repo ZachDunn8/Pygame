@@ -1,18 +1,23 @@
 import pygame
-from math import fabs
+import time
+from math import fabs, hypot
+from random import randint
 pygame.init()
 screen_size = (512, 480)
 pygame_screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("Goblin Chase")
 background_image = pygame.image.load('background.png')
-hero_image = pygame.image.load('hero.png')
-goblin_image = pygame.image.load('goblin.png')
+hero_image = pygame.image.load('link_model.png')
+goblin_image = pygame.image.load('triforce.png')
+pygame.mixer.music.load('zelda_06.wav')
+pygame.mixer.music.play(-1)
+
 
 
 hero = {
 	"x":100,
 	"y":100,
-	"speed":5,
+	"speed":3,
 	"wins": 0
 }
 
@@ -21,8 +26,19 @@ hero = {
 goblin = {
 	"x": 200,
 	'y': 200,
-	"speed": 2
+	"speed": 10
+ 
 }
+
+monster = {
+	'x': 100,
+	'y': 100,
+	'speed': 3,
+	'dx': 1,
+	'dy': 1
+}
+
+
 
 keys = {
 	"up": 273,
@@ -55,7 +71,7 @@ while game_on:
 			elif event.key == keys ['left']:
 			#hero['x'] =+ hero ['speed']
 				keys_down['left'] = True
-				print "I p[ressed left"
+				print "I pressed left"
 			elif event.key == keys ['right']:
 			#hero['x'] += hero ['speed']
 				keys_down['right'] = True
@@ -72,21 +88,43 @@ while game_on:
 			elif event.key == keys ['right']:
 			#hero['x'] += hero ['speed']
 				keys_down['right'] = False
-	if keys_down['up']:
-		hero['y'] -= hero['speed']
-	elif keys_down['down']:
-		hero['y'] += hero['speed']
-	if keys_down['left']:
-		hero['x'] -= hero['speed']
-	elif keys_down['right']:
-		hero['x'] += hero['speed']
+
+		
+
+	if goblin['x'] in range(0, 460):
+		if goblin['y'] in range(0, 490):			
+
+
+			if hero['x'] in range (0, 460):
+				if hero['y'] in range (0, 490):	
+					
+
+
+
+					if keys_down['up']:
+						hero['y'] -= hero['speed']
+					elif keys_down['down']:
+						hero['y'] += hero['speed']
+					if keys_down['left']:
+						hero['x'] -= hero['speed']
+					elif keys_down['right']:
+						hero['x'] += hero['speed']
+
+	
+
 
 
 	distance_between = fabs(hero['x'] - goblin['x']) + fabs(hero['y'] - goblin['y'])
-	#if distance_between < 32:
-	#	print "COLLISION!"
+	if distance_between < 10:
+		print "You got me!"
+		hero['wins'] += 1
+		pygame.mixer.music.load("zelda_win.wav")	
+		pygame.mixer.music.play()
+
+			
 	#else:
 	#	print "not touching"
+	
 
 
 
@@ -100,6 +138,8 @@ while game_on:
 
 	pygame_screen.blit(hero_image, [hero['x'],hero['y']])
 	pygame_screen.blit(goblin_image, [goblin['x'], goblin['y']])
+	
+
 	
 
 	pygame.display.flip()
